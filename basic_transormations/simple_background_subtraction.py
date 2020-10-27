@@ -21,15 +21,19 @@ while True:
     ret, frame = cap.read()
     if frame is None:
         break
-  
-    # # to-zero thresholding
+    
+    # convert to gray
+    grayFrame = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
+
+    # to-zero thresholding
     # ret, thresh = cv.threshold(frame,thresh_val,thresh_maxVal,cv.THRESH_TOZERO)
-  
-    # adaptive thresholding
-    ad_thresh = cv.adaptiveThreshold(img,255,cv.ADAPTIVE_THRESH_GAUSSIAN_C,cv2.THRESH_BINARY,11,2)
+
+    # # adaptive thresholding
+    # ad_thresh = cv.adaptiveThreshold(grayFrame,255,cv.ADAPTIVE_THRESH_MEAN_C,cv.THRESH_BINARY,11,2)
+
 
     # apply background subtraction mask
-    fgMask = backSub.apply(add_thresh, learningRate=0.5)
+    fgMask = backSub.apply(grayFrame, learningRate=0.5)
     
     cv.rectangle(frame, (10, 2), (100,20), (255,255,255), -1)
     cv.putText(frame, str(cap.get(cv.CAP_PROP_POS_FRAMES)), (15, 15), cv.FONT_HERSHEY_SIMPLEX, 0.5 , (0,0,0))
